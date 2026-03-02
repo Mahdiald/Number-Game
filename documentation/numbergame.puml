@@ -1,0 +1,38 @@
+@startuml
+'https://plantuml.com/class-diagram
+
+class Game{
+    - int answer
+    - Player player
+    + void startGame()
+    - void playGame()
+}
+
+class Player{
+    - String name
+    - int score
+}
+
+class IO{
+    - Scanner scanner
+    + void sendMessage(String msg)
+    + String promptString(String msg)
+    + int promptInt(String msg)
+}
+
+class GraphicIO{}
+
+class Main{
+    + void main()
+}
+
+class Scanner{}
+
+IO *-- Scanner
+Game *-- IO
+Game *-- Player
+Main *-- Game
+IO <|-- GraphicIO
+
+
+@enduml

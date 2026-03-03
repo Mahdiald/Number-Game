@@ -14,31 +14,26 @@ public class Game {
         //Velkommen til bruger (Regler: skriv "q" for at stoppe)
         io.sendMessage("velkommen til \n Gæt et tal");
 
-        //spørg bruger om navn
-        String playerName = io.promptString("Skriv dit navn");
-        player = new Player(playerName);
-        //Vi skal bruge composition.IO til dette
-
         boolean stillPlaying = true;
 
+        while(stillPlaying) {
+            //spørg bruger om navn
+            String playerName = io.promptString("Skriv dit navn");
+            player = new Player(playerName);
+            //Vi skal bruge composition.IO til dette
 
-        //Vil du spille spil y/n
-        String nytSpil = io.promptString("Nyt spil? \n y/n");
-        //hvis bruger input er y så kør nyt spil
-        if (nytSpil.equals("y")){
-            while(stillPlaying) {
-                io.sendMessage("Du skal gæt et tal mellem 1 til 100");
-                //opret et answer
-                Random random = new Random();
-                answer = random.nextInt(100) + 1;
-                playGame();
-                String again = io.promptString("Vil du spille igen? \n y/n");
-                if(!again.equalsIgnoreCase("y")){
-                    stillPlaying = false;
-                }
+            io.sendMessage("Du skal gæt et tal mellem 1 til 100");
+            //opret et answer
+            Random random = new Random();
+            answer = random.nextInt(100) + 1;
+            playGame();
+            String again = io.promptString("Vil du spille igen? \n y/n");
+            if(!again.equalsIgnoreCase("y")){
+                stillPlaying = false;
             }
-            io.sendMessage("Tak for spillet!");
         }
+
+        io.sendMessage("Tak for spillet!");
 
     }
 
@@ -64,11 +59,8 @@ public class Game {
 
             if (result == answer){
                 guessed = true;
-                player.setScore(noOfGuesses);
                 io.sendMessage("\uD83C\uDF8A Tilykke " + player.getName() + ". Du brugte " + noOfGuesses + " gæt!");
-            }
-
-            else if (result > answer){
+            } else if (result > answer){
                 io.sendMessage("Desværre, det var for højt.");
             } else if (result < answer) {
                 io.sendMessage("Desværre, det var for lavt.");
@@ -76,7 +68,16 @@ public class Game {
 
 
         }
-        scoreBoard.addPlayer(player);
+
+        Player exsistingPlayer = scoreBoard.findPlayer(player.getName());
+
+        if(exsistingPlayer != null){
+            exsistingPlayer.setScore(noOfGuesses);
+        }else{
+            player.setScore(noOfGuesses);
+            scoreBoard.addPlayer(player);
+        }
+
         scoreBoard.printTopTen();
 
     }
